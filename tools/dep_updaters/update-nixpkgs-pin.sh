@@ -81,12 +81,12 @@ nix-instantiate -I "nixpkgs=$NIXPKGS_PIN_FILE" --eval --strict --json -E "
   }
 " | jq -r '"{
   pkgs ? import ./pkgs.nix {
-    config.permittedInsecurePackages = [ \(.permittedInsecurePackages | map(@json) | join(" ")) ];
+    config.permittedInsecurePackages = [ \(.permittedInsecurePackages | if length > 0 then "\(map(@json) | join(" ")) " else "" end)];
   },
 }:
 
 {
-  # "default" OpenSSL release line, should be kept in sync with the bundled version:
+  # \"default\" OpenSSL release line, should be kept in sync with the bundled version:
   openssl = pkgs.\(.default);
 
   # Other OpenSSL variants we want to test for:
